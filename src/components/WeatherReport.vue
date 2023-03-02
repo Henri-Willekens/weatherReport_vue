@@ -8,13 +8,19 @@
                 <img src="../assets/cloudy.png" alt="cloudy">
             </div>
             <div v-if="showRainy" class="weather-condition">
-                <img src="../assets/cloudy.png" alt="cloudy">
+                <img src="../assets/rain.png" alt="rainy">
             </div>
             <div v-if="showStorm" class="weather-condition">
-                <img src="../assets/cloudy.png" alt="cloudy">
+                <img src="../assets/thunderstorm.png" alt="cloudy">
             </div>
             <div v-if="showClear" class="weather-condition">
                 <img src="../assets/clear.png" alt="Clear sky">
+            </div>
+            <div v-if="showDrizzle" class="weather-condition">
+                <img src="../assets/drizzle.png" alt="Clear sky">
+            </div>
+            <div v-if="showSnow" class="weather-condition">
+                <img src="../assets/snow.png" alt="Clear sky">
             </div>
 
             <div class="input-container">
@@ -26,7 +32,7 @@
 
 
         </div>
-        <h3>Cities:</h3>
+        <!-- <h3>Cities:</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -42,66 +48,63 @@
                     <td> {{ temperature }}</td>
                 </tr>
             </tbody>
-        </table>
-    </div> 
+        </table> -->
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-    data(){
-        return{
+    data() {
+        return {
             weather: {},
             weatherDescription: '',
-            showCloudy:false,
-            showRainy:false,
-            showStorm:false,
-            showClear:false,
-            temperature:'',
-            weatherImage:'',
+            showCloudy: false,
+            showRainy: false,
+            showStorm: false,
+            showDrizzle: false,
+            showClear: false,
+            showSnow: false,
+            temperature: '',
+            weatherImage: '',
             city: 'Amsterdam'
         }
-    }, 
-    methods:{
+    },
+    methods: {
         // https://openweathermap.org/weather-conditions
-        getWeatherData(){
+        getWeatherData() {
             axios.get('https://api.openweathermap.org/data/2.5/weather?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
-            response => {
-                console.log(response.data)
-                let mainDescription = response.data.weather[0].main;
-                let descriptionString = response.data.weather[0].description;
-                this.weatherDescription = descriptionString.charAt(0).toUpperCase() + descriptionString.slice(1);
-                this.temperature = response.data.main.temp.toFixed(1);
+                response => {
+                    console.log(response.data)
+                    let mainDescription = response.data.weather[0].main;
+                    let descriptionString = response.data.weather[0].description;
+                    this.weatherDescription = descriptionString.charAt(0).toUpperCase() + descriptionString.slice(1);
+                    this.temperature = response.data.main.temp.toFixed(1);
 
-                if(mainDescription == 'Clouds'){
-                this.showCloudy = true;
+                    this.showCloudy = mainDescription == 'Cloudy'
+                    this.showRainy = mainDescription == 'Rain'
+                    this.showClear = mainDescription == 'Clear'
+                    this.showDrizzle = mainDescription == 'Mist'
+                    this.showSnow = mainDescription == 'Snow'
+                    this.showStorm = mainDescription == 'Thunderstorm'
                 }
-                if (mainDescription == 'Rain'){
-                this.showRainy = true;
-                }
-                if (mainDescription == 'Thunderstorm'){
-                this.showStorm = true;
-                }
-                if (mainDescription == 'Clear'){
-                this.showClear = true;
-                }
-            }
-        ).catch(error => {console.log(error)})
+            ).catch(error => { console.log(error) })
         }
     },
-    mounted(){
+    mounted() {
         this.getWeatherData();
     }
 }
 </script>
 
 <style>
-.container{
+.container {
     width: 100%;
     display: flex;
     justify-content: center;
 }
-.inner-container{
+
+.inner-container {
     width: 50%;
     background-color: rgb(142, 142, 196);
 }
