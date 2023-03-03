@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <div class="inner-container">
+            <h3>Today:</h3>
             <h2>{{ temperature }}<span>&#176;C</span></h2>
             <p>{{ weatherDescription }}</p>
 
@@ -27,28 +28,36 @@
                 <label for="city">City: </label>
                 <input type="text" name="city" v-model="city">
             </div>
-            <button @click="getWeatherData()">Get Data</button>
-
-
-
+            <button @click="getWeatherData(); getForecastData();">Get Data</button>
         </div>
-        <!-- <h3>Cities:</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">City</th>
-                    <th scope="col">Weather</th>
-                    <th scope="col">Temperature</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="weather in weather" v-bind:key="weather.id">
-                    <th scope="row">{{ city }}</th>
-                    <td> {{ weather }}</td>
-                    <td> {{ temperature }}</td>
-                </tr>
-            </tbody>
-        </table> -->
+
+    </div>
+    <div class="container">
+        <div class="inner-container">
+            <h3>Weather:</h3>
+            <table class="weather-condition">
+                <thead>
+                    <tr>
+                        <th scope="col">City</th>
+                        <th scope="col">Weather today</th>
+                        <th scope="col">Temperature today</th>
+                        <th scope="col">Weather 24 H</th>
+                        <th scope="col">Temperature 24 H</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row"> </th>
+                        <td> {{ Forcity }}</td>
+                        <td> {{ weatherDescription }}</td>
+                        <td> {{ temperature }}</td>
+                        <td> {{ ForweatherDescription }}</td>
+                        <td> {{ Fortemperature }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </template>
 
@@ -59,15 +68,18 @@ export default {
         return {
             weather: {},
             weatherDescription: '',
+            temperature: '',
             showCloudy: false,
             showRainy: false,
             showStorm: false,
             showDrizzle: false,
             showClear: false,
             showSnow: false,
-            temperature: '',
             weatherImage: '',
-            city: 'Amsterdam'
+            ForweatherDescription: '',
+            Fortemperature: '',
+            city: 'Amsterdam',
+            Forcity: ''
         }
     },
     methods: {
@@ -75,7 +87,7 @@ export default {
         getWeatherData() {
             axios.get('https://api.openweathermap.org/data/2.5/weather?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
                 response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     let mainDescription = response.data.weather[0].main;
                     let descriptionString = response.data.weather[0].description;
                     this.weatherDescription = descriptionString.charAt(0).toUpperCase() + descriptionString.slice(1);
@@ -89,10 +101,23 @@ export default {
                     this.showStorm = mainDescription == 'Thunderstorm'
                 }
             ).catch(error => { console.log(error) })
+        },
+        getForecastData() {
+            axios.get('https://api.openweathermap.org/data/2.5/forecast?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
+                response => {
+                    console.log(response.data)
+                    let FordescriptionString = response.data.list[8].weather[0].description;
+                    this.ForweatherDescription = FordescriptionString.charAt(0).toUpperCase() + FordescriptionString.slice(1);
+                    this.Fortemperature = response.data.list[8].main.temp;
+                    this.Forcity = this.city;
+                }
+            ).catch(error => { console.log(error) })
         }
     },
+
     mounted() {
         this.getWeatherData();
+        this.getForecastData();
     }
 }
 </script>
