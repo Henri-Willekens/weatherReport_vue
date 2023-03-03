@@ -2,7 +2,12 @@
     <div class="container">
         <div class="inner-container">
             <h3>Today:</h3>
-            <h2>{{ temperature }}<span>&#176;C</span></h2>
+            <h2>{{ temperature }} <label for="toggle_button">
+                    <span v-if="currentState">&#176;C</span>
+                    <span v-if="!currentState">&#176;F</span>
+
+                    <input type="checkbox" id="toggle_button" v-model="checkedValue">
+                </label></h2>
             <p>{{ weatherDescription }}</p>
 
             <div v-if="showCloudy" class="weather-condition">
@@ -47,7 +52,6 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row"> </th>
                         <td> {{ Forcity }}</td>
                         <td> {{ weatherDescription }}</td>
                         <td> {{ temperature }}</td>
@@ -79,14 +83,35 @@ export default {
             ForweatherDescription: '',
             Fortemperature: '',
             city: 'Amsterdam',
-            Forcity: ''
+            Forcity: '',
+            currentState: true,
+            unit: 'metric',
+        }
+    },
+    computed: {
+        checkedValue: {
+            get() {
+                return this.currentState
+            },
+            set(newValue) {
+                this.currentState = newValue;
+                //console.log(newValue)
+                if (this.unit == 'metric') {
+                    this.unit = 'imperial'
+                } else {
+                    this.unit = 'metric'
+                }
+
+                //this.unit = newValue == 'imperial'
+            }
         }
     },
     methods: {
         // https://openweathermap.org/weather-conditions
         getWeatherData() {
-            axios.get('https://api.openweathermap.org/data/2.5/weather?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
+            axios.get('https://api.openweathermap.org/data/2.5/weather?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=' + this.unit).then(
                 response => {
+                    console.log(this.unit)
                     // console.log(response.data.weather[0].main)
                     let mainDescription = response.data.weather[0].main;
                     let descriptionString = response.data.weather[0].description;
@@ -132,5 +157,29 @@ export default {
 .inner-container {
     width: 50%;
     background-color: rgb(142, 142, 196);
+}
+
+.weather-condition {
+    text-align: center;
+  margin: auto;
+}
+
+#container {
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.toggle__button {
+    vertical-align: middle;
+    user-select: none;
+    cursor: pointer;
+}
+
+.toggle__button input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
 }
 </style>
