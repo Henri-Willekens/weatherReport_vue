@@ -87,13 +87,13 @@ export default {
         getWeatherData() {
             axios.get('https://api.openweathermap.org/data/2.5/weather?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
                 response => {
-                    // console.log(response.data)
+                    // console.log(response.data.weather[0].main)
                     let mainDescription = response.data.weather[0].main;
                     let descriptionString = response.data.weather[0].description;
                     this.weatherDescription = descriptionString.charAt(0).toUpperCase() + descriptionString.slice(1);
                     this.temperature = response.data.main.temp.toFixed(1);
 
-                    this.showCloudy = mainDescription == 'Cloudy'
+                    this.showCloudy = mainDescription == 'Clouds'
                     this.showRainy = mainDescription == 'Rain'
                     this.showClear = mainDescription == 'Clear'
                     this.showDrizzle = mainDescription == 'Mist'
@@ -105,7 +105,7 @@ export default {
         getForecastData() {
             axios.get('https://api.openweathermap.org/data/2.5/forecast?q=' + this.city + '&APPID=94e38cae9ff71a42769f2ff6499340d7&units=metric').then(
                 response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     let FordescriptionString = response.data.list[8].weather[0].description;
                     this.ForweatherDescription = FordescriptionString.charAt(0).toUpperCase() + FordescriptionString.slice(1);
                     this.Fortemperature = response.data.list[8].main.temp;
