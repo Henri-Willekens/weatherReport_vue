@@ -27,30 +27,50 @@
     </div>
     <div class="container">
         <div class="inner-container">
-            <h3>Weather:</h3>
-            <table class="weather-condition">
-                <thead>
-                    <tr>
-                        <th scope="col">City</th>
-                        <th scope="col">Weather today</th>
-                        <th scope="col">Temperature today</th>
-                        <th scope="col">Weather 24 H</th>
-                        <th scope="col">Temperature 24 H</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td> {{ Forcity }}</td>
-                        <td> {{ weatherDescription }}</td>
-                        <td> {{ temperature }}</td>
-                        <td> {{ ForweatherDescription }}</td>
-                        <td> {{ Fortemperature }}</td>
-                    </tr>
-                </tbody>
-            </table>
+
         </div>
 
     </div>
+    <h3>Weather:</h3>
+    <table class="weather-condition">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">City</th>
+                <th scope="col">Weather today</th>
+                <th scope="col">Temperature today</th>
+                <th scope="col">Weather 24 H</th>
+                <th scope="col">Temperature 24 H</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(forecast_data, k) in forecast_datas" :key="k">
+                <td scope="row">
+                    <button class="trashContainer" type='button' @click="deleteRow(k, forecast_data)"></button>
+                </td>
+                <td>
+                    <input readonly class="form-control" type="text" v-model="forecast_data.Forcity" />
+                </td>
+                <td>
+                    <input readonly class="form-control" type="text" v-model="forecast_data.weatherDescription" />
+                </td>
+                <td>
+                    <input readonly class="form-control" type="text" v-model="forecast_data.temperature" />
+                </td>
+                <td>
+                    <input readonly class="form-control" type="text" v-model="forecast_data.ForweatherDescription" />
+                </td>
+                <td>
+                    <input readonly class="form-control" type="text" v-model="forecast_data.Fortemperature" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type='button' class="btn btn-info" @click="addNewRow">
+        <i class="fas fa-plus-circle"></i>
+        Add
+    </button>
 </template>
 
 <script>
@@ -58,18 +78,19 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            weatherDescription: '',
-            temperature: '',
             showCloudy: false,
             showRainy: false,
             showStorm: false,
             showDrizzle: false,
             showClear: false,
             showSnow: false,
+            weatherDescription: '',
             ForweatherDescription: '',
             Fortemperature: '',
             city: 'Amsterdam',
+            temperature: '',
             Forcity: '',
+            forecast_datas: [{}],
             isMetric: true
         }
     },
@@ -126,8 +147,27 @@ export default {
                     this.Forcity = this.city;
                 }
             ).catch(error => { console.log(error) })
-        }
+        },
+        addNewRow() {
+            this.forecast_datas.push({
+                Forcity: this.Forcity,
+                weatherDescription: this.weatherDescription,
+                temperature: this.temperature,
+                ForweatherDescription: this.ForweatherDescription,
+                Fortemperature: this.Fortemperature,
+                line_total: 0
+            });
+        },
+        deleteRow(index, forecast_data) {
+            var idx = this.forecast_datas.indexOf(forecast_data);
+            console.log(idx, index);
+            if (idx > -1) {
+                this.forecast_datas.splice(idx, 1);
+            }
+        },
     },
+
+
 
     mounted() {
         this.getWeatherAndForecastData()
@@ -169,5 +209,11 @@ export default {
     position: absolute;
     width: 1px;
     height: 1px;
+}
+
+.trashContainer {
+    vertical-align: middle !important;
+    padding-top: 10px;
+    text-align: center;
 }
 </style>
