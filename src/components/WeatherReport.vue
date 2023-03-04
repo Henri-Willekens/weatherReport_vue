@@ -23,13 +23,6 @@
                 <input type="text" name="city" v-model="city">
             </div>
         </div>
-
-    </div>
-    <div class="container">
-        <div class="inner-container">
-
-        </div>
-
     </div>
     <h3>Weather:</h3>
     <table class="weather-condition">
@@ -122,7 +115,7 @@ export default {
                     this.showClear = mainDescription == "Clear"
                     this.showCloudy = mainDescription == "Clouds"
                     this.showRainy = mainDescription == "Rain"
-                    this.showDrizzle = mainDescription == "Mist"
+                    this.showDrizzle = mainDescription == "Drizzle"
                     this.showSnow = mainDescription == "Snow"
                     this.showStorm = mainDescription == "Thunderstorm"
                 }
