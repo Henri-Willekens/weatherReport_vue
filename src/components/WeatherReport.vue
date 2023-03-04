@@ -44,10 +44,25 @@
             </tr>
         </thead>
         <tbody>
+            <td scope="row">
+            </td>
+            <td>
+                <input readonly class="form-control" type="text" v-model="Forcity" />
+            </td>
+            <td>
+                <input readonly class="form-control" type="text" v-model="weatherDescription" />
+            </td>
+            <td>
+                <input readonly class="form-control" type="text" v-model="temperature" />
+            </td>
+            <td>
+                <input readonly class="form-control" type="text" v-model="ForweatherDescription" />
+            </td>
+            <td>
+                <input readonly class="form-control" type="text" v-model="Fortemperature" />
+            </td>
             <tr v-for="(forecast_data, k) in forecast_datas" :key="k">
-                <td scope="row">
-                    <button class="trashContainer" type='button' @click="deleteRow(k, forecast_data)"></button>
-                </td>
+                <button class="trashContainer" type='button' @click="deleteRow(k, forecast_data)"></button>
                 <td>
                     <input readonly class="form-control" type="text" v-model="forecast_data.Forcity" />
                 </td>
@@ -155,7 +170,6 @@ export default {
                 temperature: this.temperature,
                 ForweatherDescription: this.ForweatherDescription,
                 Fortemperature: this.Fortemperature,
-                line_total: 0
             });
         },
         deleteRow(index, forecast_data) {
